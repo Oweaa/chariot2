@@ -1,0 +1,41 @@
+\makeatletter
+\pgfdeclareshape{datastore}{
+  \inheritsavedanchors[from=rectangle]
+  \inheritanchorborder[from=rectangle]
+  \inheritanchor[from=rectangle]{center}
+  \inheritanchor[from=rectangle]{base}
+  \inheritanchor[from=rectangle]{north}
+  \inheritanchor[from=rectangle]{north east}
+  \inheritanchor[from=rectangle]{east}
+  \inheritanchor[from=rectangle]{south east}
+  \inheritanchor[from=rectangle]{south}
+  \inheritanchor[from=rectangle]{south west}
+  \inheritanchor[from=rectangle]{west}
+  \inheritanchor[from=rectangle]{north west}
+  \backgroundpath{
+    %  store lower right in xa/ya and upper right in xb/yb
+    \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+    \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+    \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya}}
+    \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@yb}}
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+ }
+}
+\makeatother
+
+\tikzset{
+  font=\sffamily,
+  every matrix/.style={ampersand replacement=\&,column sep=2cm,row sep=2cm},
+  blank/.style={},
+  terminator/.style={draw,thick,inner sep=.3cm,minimum width=3cm,minimum height=2cm},
+  process/.style={draw,thick,circle,minimum size=3cm},
+  cprocess/.style={draw,thick,circle,minimum size=3cm, dashed},
+  datastore/.style={draw,very thick,shape=datastore,inner sep=.3cm, minimum width=3cm,minimum height=1cm},
+  dots/.style={gray,scale=2},
+  flow/.style={->,>=stealth',shorten >=1pt,semithick,font=\sffamily\footnotesize},
+  cflow/.style={->,>=stealth',shorten >=1pt,semithick,font=\sffamily\footnotesize, dashed},
+  every node/.style={align=center},
+  block/.style= {draw, rounded corners, rectangle, align=center,minimum width=3cm,minimum height=2cm},
+  module/.style={draw,thick,inner sep=.3cm,minimum width=3cm,minimum height=2cm, rounded corners}
+}

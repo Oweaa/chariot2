@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+# Latex
+*verslag.aux
+*verslag.bbl
+*verslag.blg
+*verslag.fdb_latexmk
+*verslag.fls
+*verslag.log
+*verslag.synctex.gz
+*verslag.toc

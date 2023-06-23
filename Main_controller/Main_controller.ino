@@ -1,9 +1,10 @@
 // include libraries
 #include <Adafruit_PWMServoDriver.h>
 #include <VL53L0X.h>
+#include <SoftwareSerial.h>
 
 // define
-#define MESSAGE_LENGTH 15
+#define MESSAGE_LENGTH 25
 
 // servo driver
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
@@ -27,11 +28,18 @@ int array_length = sizeof(distanceData) / sizeof(int);
 String distanceSensorData = "";
 
 // array for received messages from server
-char message[MESSAGE_LENGTH];
+static char message[MESSAGE_LENGTH];
+
+// init Serial for communication
+SoftwareSerial commSerial(3, 2); // RX, TX
 
 void setup() {
   // Setup serial
   Serial.begin(9600);
+  Serial.println("setup");
+  commSerial.begin(115200);
+  pinMode(3, INPUT);
+  pinMode(2, OUTPUT);
   
   // Initialize the PWM and servo shield
   pwm.begin();
@@ -41,31 +49,32 @@ void setup() {
 
   // Setup ToF sensor
   lox.init();
+  Serial.println("ToF");
   lox.setTimeout(500);
   lox.startContinuous();
 
   // center sensor servo, ToF sensor looking forward
   pwm.setPWM(servonum_0, 0, angle_to_pulse(90));
-
+  Serial.println("end setup");
 }
 
-uint16_t angle_to_pulse(int angle) {
+uint16_t angle_to_pulse(int angles) {
   float pulse_len;
   // 0 degree leads to SERVOMIN (should be 1000 uS)
   // 180 degrees leads to SERVOMAX (should be 2000 uS)
   // anything in the middle is linearly integrated 
-  angle = constrain(angle,0,180) ; // to be safe (memory 32632)
-  pulse_len = SERVOMIN +(SERVOMIN - SERVOMIN) / 180.0 * float(angle);
+  angles = constrain(angles,0,180) ; // to be safe (memory 32632)
+  pulse_len = SERVOMIN +(SERVOMIN - SERVOMIN) / 180.0 * float(angles);
 //  Serial.println(pulse_len);
   return(pulse_len);
 }
 
 void get_distance_array(){
   // set sensor servo to 0, 90 and 180 degrees, scans the distance and put them into a array
-  for(int angle = 0; angle <= 180; angle += 90) {
+  for(int angles = 0; angles <= 180; angles += 90) {
 //    Serial.println(angle);
-    pwm.setPWM(servonum_0, 0, angle_to_pulse(angle));
-    distanceData[angle / 90] = lox.readRangeContinuousMillimeters();
+    pwm.setPWM(servonum_0, 0, angle_to_pulse(angles));
+    distanceData[angles / 90] = lox.readRangeContinuousMillimeters();
     delay(1000);
   }
 }
@@ -103,20 +112,22 @@ void drive_stop() {
 }
 
 void loop() {
-  while (Serial.available() > 0) {
-    int message_pos = 0;
-
-    char inByte = Serial.read();
-
-    if (inByte != '\n' && (message_pos < MESSAGE_LENGTH - 1)) {
-      message[message_pos] = inByte;
-      message_pos++;
-    } else {
-      message[message_pos] = '\0';
-      Serial.print("Message received: ");
-      Serial.println(message);
-      message_pos = 0;    
-    }
-  }
+//  Serial.println("test");
+  drive_forward();
   delay(1000);
+  drive_stop();
+//  if (commSerial.available() > 0) {
+//    int myFloat = int(commSerial.parseFloat(SKIP_ALL, '\n'));
+//
+//    // prints the received float number
+//    Serial.print("I received: ");
+//    Serial.println(int(myFloat));
+//    if (int(myFloat == 1)) {
+//      get_distance_array();
+//      print_sensor_data();
+//    }
+//  }
+
+
+  delay(3000);
 }

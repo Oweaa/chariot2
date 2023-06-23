@@ -1,0 +1,67 @@
+\input{config/packages.tex}
+\input{config/tikz.tex}
+
+\newcommand{\version}{1.0}
+
+\newcommand{\setpagestyle}{
+    \fancyhf{}
+    \fancyfoot[LE,LO]{Version \version}
+    \fancyfoot[RE,RO]{Page \thepage/\pageref{LastPage}}
+    \renewcommand{\headrulewidth}{0pt}% Line at the header invisible
+    \renewcommand{\footrulewidth}{0.4pt}% Line at the footer visible
+}
+\pagestyle{fancy}
+
+\fancypagestyle{plain}{
+    \setpagestyle
+}
+\setpagestyle
+
+\newcommand{\authorcite}[1]{\citeauthor{#1}\,\supercite{#1}}
+
+\usetikzlibrary{shapes.geometric, arrows}
+\tikzstyle{arrow} = [thick,->,>=stealth]
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered, draw=black]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black]
+\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black]
+
+\lstset{
+  language=C,                % choose the language of the code
+  numbers=left,                   % where to put the line-numbers
+  stepnumber=1,                   % the step between two line-numbers.        
+  numbersep=5pt,                  % how far the line-numbers are from the code
+  showspaces=false,               % show spaces adding particular underscores
+  showstringspaces=false,         % underline spaces within strings
+  showtabs=false,                 % show tabs within strings adding particular underscores
+  tabsize=2,                      % sets default tabsize to 2 spaces
+  captionpos=b,                   % sets the caption-position to bottom
+  breaklines=true,                % sets automatic line breaking
+  breakatwhitespace=true,         % sets if automatic breaks should only happen at whitespace
+  belowcaptionskip=1\baselineskip,
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  backgroundcolor=\color{gray!10!white},
+  title=\lstname,                 % show the filename of files included with \lstinputlisting;
+}
+
+\lstdefinestyle{customasm}{
+    belowcaptionskip=1\baselineskip,
+    frame=single, 
+    frameround=tttt,
+    xleftmargin=\parindent,
+    language=[x86masm]Assembler,
+    basicstyle=\footnotesize\ttfamily,
+    commentstyle=\itshape\color{green!60!black},
+    keywordstyle=\color{blue!80!black},
+    identifierstyle=\color{red!80!black},
+    tabsize=4,
+    numbers=left,
+    numbersep=8pt,
+    stepnumber=1,
+    numberstyle=\tiny\color{gray}, 
+    columns = fullflexible,
+    title=\lstname,                 % show the filename of files included with \lstinputlisting;
+}
